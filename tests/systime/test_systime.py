@@ -12,9 +12,8 @@ from datetime import datetime
 
 try:
     sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../../")
-    from systime.time import Time
+    from systime.systime import Time
 except ImportError as e:
-    print os.path.dirname(os.path.realpath(__file__)) + "/../../"
     print "Please check the python PATH for import test module. (%s)" \
         % __file__
     exit(1)
@@ -27,7 +26,7 @@ class TestTimeClass(unittest.TestCase):
                          Time.get_system_time())
 
     def test_set_system_time(self):
-        with patch("systime.time.subprocess") as subprocess:
+        with patch("systime.systime.subprocess") as subprocess:
             # case 1: command success
             subprocess.call.return_value = 1
             t = "1988-10-21T00:00:00.000Z"
@@ -51,7 +50,7 @@ class TestTimeClass(unittest.TestCase):
 
     def test_set_system_timezone(self):
         time = Time()
-        with patch("systime.time.subprocess") as subprocess:
+        with patch("systime.systime.subprocess") as subprocess:
             # case 1: command success
             subprocess.call.return_value = 1
             self.assertFalse(time.set_system_timezone("+07:00,0"))
