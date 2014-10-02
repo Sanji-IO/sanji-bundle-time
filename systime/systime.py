@@ -77,15 +77,19 @@ class Time(object):
         Exception:
             ValueError if time format is wrong
         """
+        rc = None
         try:
-            dateTimeString = datetime \
-                .strptime(time_string, "%Y-%m-%dT%H:%M:%S.%fZ") \
+            dateTimeString = datetime\
+                .strptime(time_string, "%Y-%m-%dT%H:%M:%S.%fZ")\
                 .strftime("%m%d%H%M%Y")
             dateTimeString = time_string
-            rc = subprocess.call("date %s; hwclock -w" % dateTimeString,
-                                 shell=True)
+
         except ValueError:
             raise ValueError('Time format error. ')
+
+        else:
+            rc = subprocess.call(
+                "date %s; hwclock -w" % dateTimeString, shell=True)
 
         return True if rc == 0 else False
 
@@ -105,6 +109,7 @@ class Time(object):
                                  shell=True)
             if rc == 0:
                 self.config["timezone"] = tz_string
+
         else:
             raise ValueError('Timezone string error.')
 

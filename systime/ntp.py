@@ -46,6 +46,7 @@ class Ntp(object):
     def start(self):
         if self._ntp_thread.is_alive():
             raise RuntimeError("Stop previous ntp daemon first.")
+
         self._ntp_thread.start()
 
     def _ntp_update(self):
