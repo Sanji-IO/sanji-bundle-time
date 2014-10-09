@@ -9,14 +9,12 @@ import unittest
 
 from mock import Mock
 from mock import patch
-# from datetime import datetime
 
 try:
     sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../../")
     from systime.ntp import Ntp
     from systime.ntp import NtpDate
 except ImportError as e:
-    print e
     print "Please check the python PATH for import test module. (%s)" \
         % __file__
     exit(1)
@@ -69,7 +67,6 @@ class TestNtpClass(unittest.TestCase):
     def test_update(self):
         self.ntp.stop = Mock()
         self.ntp.start = Mock()
-        NtpDate = Mock()
 
         with patch("systime.ntp.NtpDate") as NtpDate:
             self.ntp.update({"enable": 1})

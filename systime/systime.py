@@ -5,7 +5,7 @@ import subprocess
 from datetime import datetime
 
 
-class Time(object):
+class SysTime(object):
 
     TIMEZONE = {
         "-11:00,0": "Pacific/Samoa",               # SST
@@ -61,11 +61,6 @@ class Time(object):
         "+13:00,0": "Pacific/Tongatapu",           # TOT
     }
 
-    def __init__(self):
-        self.config = {
-            "timezone": "+08:00,0"
-        }
-
     @staticmethod
     def get_system_time():
         return datetime.now().strftime("%Y/%m/%d %H:%M:%S")
@@ -85,26 +80,22 @@ class Time(object):
             rc = subprocess.call("date %s; hwclock -w" % dateTimeString,
                                  shell=True)
         except ValueError:
-            raise ValueError('Time format error. ')
+            raise ValueError('Time format error.')
 
         return True if rc == 0 else False
 
-    def get_system_timezone(self):
-        return self.config["timezone"]
-
-    def set_system_timezone(self, tz_string):
+    @staticmethod
+    def set_system_timezone(timezone):
         """
         tz_string should be listed in Time.TIMEZONE
         Exception:
             ValueError if timezone sting is wrong
         """
-        if tz_string in Time.TIMEZONE:
+        if timezone in SysTime.TIMEZONE:
             rc = subprocess.call("echo \"%s\" > /etc/timezone;" %
-                                 Time.TIMEZONE[tz_string] +
+                                 SysTime.TIMEZONE[timezone] +
                                  "dpkg-reconfigure -f noninteractive tzdata",
                                  shell=True)
-            if rc == 0:
-                self.config["timezone"] = tz_string
         else:
             raise ValueError('Timezone string error.')
 

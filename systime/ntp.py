@@ -42,6 +42,8 @@ class Ntp(object):
         if self._ntp_thread.is_alive():
             self._ntp_deamon_event.set()
             self._ntp_thread.join()
+            return True
+        return False
 
     def start(self):
         if self._ntp_thread.is_alive():
@@ -52,9 +54,8 @@ class Ntp(object):
         prev_time = time()
         while not self._ntp_deamon_event.is_set():
             time_diff = math.fabs(prev_time - time())
-            print time_diff, self.config["interval"]
             if time_diff < self.config["interval"]:
-                sleep(0.1)
+                sleep(1)
                 continue
 
             NtpDate(self.config["servers"])
