@@ -42,6 +42,8 @@ class Ntp(object):
         if self._ntp_thread.is_alive():
             self._ntp_deamon_event.set()
             self._ntp_thread.join()
+            # reinitialize Thread Object
+            self._ntp_thread = Thread(target=self._ntp_update)
             return True
         return False
 
