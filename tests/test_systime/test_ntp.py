@@ -58,6 +58,8 @@ class TestNtpClass(unittest.TestCase):
             self.ntp.start()
             self.ntp._ntp_thread.start.assert_called_once_with()
         self.ntp.stop()
+        # stop() will reinitialize Thread Object so we have to give new Mock
+        self.ntp._ntp_thread = Mock()
 
         # case 2: normal
         self.ntp._ntp_thread.is_alive.return_value = False
