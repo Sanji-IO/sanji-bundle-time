@@ -15,8 +15,8 @@
   "role": "model",
   "resources": [
     {
-      "methods": "get",
-      "resource": "/sanji/bundles"
+      "methods": ["get", "put"],
+      "resource": "/system/time"
     }
   ]
 }
