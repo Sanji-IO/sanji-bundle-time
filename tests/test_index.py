@@ -34,8 +34,8 @@ class TestIndexClass(unittest.TestCase):
 
     def test_get(self):
         result = {
-            "time": "2014/10/09 10:12:50",
-            "timezone": "+8,00,0",
+            "time": "2015-03-26T16:27:48.611441Z",
+            "timezone": "+08:00,0",
             "ntp": {
                 "enable": 0,
                 "servers": ["pool.ntp.org"],
@@ -44,7 +44,7 @@ class TestIndexClass(unittest.TestCase):
         }
         resp = Mock()
         with patch("index.SysTime.get_system_time") as get_system_time:
-            get_system_time.return_value = "2014/10/09 10:12:50"
+            get_system_time.return_value = "2015-03-26T16:27:48.611441Z"
             self.index.get(message=None, response=resp, test=True)
         resp.assert_called_once_with(data=result)
 

@@ -63,7 +63,7 @@ class SysTime(object):
 
     @staticmethod
     def get_system_time():
-        return datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+        return datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
     @staticmethod
     def set_system_time(time_string):
@@ -77,7 +77,6 @@ class SysTime(object):
             dateTimeString = datetime\
                 .strptime(time_string, "%Y-%m-%dT%H:%M:%S.%fZ")\
                 .strftime("%m%d%H%M%Y")
-            dateTimeString = time_string
 
         except ValueError:
             raise ValueError('Time format error.')
