@@ -22,27 +22,27 @@ except ImportError as e:
 class TestTimeClass(unittest.TestCase):
 
     def test_get_system_time(self):
-        self.assertEqual(datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
-                         SysTime.get_system_time())
+        self.assertEqual(
+            datetime.now().strftime("%Y-%m-%dT%H:%M")[0:10],
+            SysTime.get_system_time()[0:10])
 
     def test_set_system_time(self):
         with patch("systime.systime.subprocess") as subprocess:
             # case 1: command success
-            subprocess.call.return_value = 1
-            t = "1988-10-21T00:00:00.000Z"
-            self.assertFalse(SysTime.set_system_time(t))
-            subprocess.call.assert_any_call("date %s; hwclock -w" % t,
-                                            shell=True)
+            subprocess.call.return_value = 0
+            t = "2015-03-26T16:27:48.611441Z"
+            ans_t = "032616272015"
+            self.assertTrue(SysTime.set_system_time(t))
+            subprocess.call.assert_called_with(
+                "date %s; hwclock -w" % ans_t, shell=True)
 
             # case 2: command failed
-            subprocess.call.return_value = 0
-            self.assertTrue(SysTime.set_system_time(t))
-            subprocess.call.assert_any_call("date %s; hwclock -w" % t,
-                                            shell=True)
+            subprocess.call.return_value = 1
+            self.assertFalse(SysTime.set_system_time(t))
 
             # case 3: invaild input
             with self.assertRaises(ValueError):
-                SysTime.set_system_time("19881-1T00:00:00.000Z")
+                SysTime.set_system_time("2015-0-26T16:27:48.611441Z")
 
     def test_set_system_timezone(self):
         with patch("systime.systime.subprocess") as subprocess:

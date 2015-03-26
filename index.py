@@ -14,7 +14,7 @@ class Index(Sanji):
 
     def init(self, *args, **kwargs):
         self.config = {
-            "timezone": "+8,00,0",
+            "timezone": "+08:00,0",
             "ntp": {
                 "enable": 0,
                 "servers": ["pool.ntp.org"],
