@@ -33,9 +33,9 @@ class Ntp(object):
         self.config = dict(self.config.items() + config.items())
 
         # restart ntp daemon, if enable otherwise stop it.
-        NtpDate(self.config["servers"])
         self.stop()
         if self.config["enable"] == 1:
+            NtpDate(self.config["servers"])
             self.start()
 
     def stop(self):
