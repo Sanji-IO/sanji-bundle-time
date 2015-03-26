@@ -14,6 +14,8 @@ logger = logging.getLogger("Time")
 
 
 def NtpDate(servers):
+    if not hasattr(servers, 'lower'):
+        servers = " ".join(servers)
     rc = subprocess.call(["ntpdate", servers])
     logger.debug("NTP update %s." % "successfully"
                  if rc == 0 else "failed")
@@ -27,6 +29,9 @@ class Ntp(object):
         self.config = config
         self._ntp_deamon_event = Event()
         self._ntp_thread = Thread(target=self._ntp_update)
+        self._ntp_thread.daemon = True
+        if self.config["enable"] == 1:
+            self.start()
 
     def update(self, config):
         # Update config
@@ -38,12 +43,16 @@ class Ntp(object):
             NtpDate(self.config["servers"])
             self.start()
 
+        return True
+
     def stop(self):
         if self._ntp_thread.is_alive():
             self._ntp_deamon_event.set()
             self._ntp_thread.join()
             # reinitialize Thread Object
+            self._ntp_deamon_event.clear()
             self._ntp_thread = Thread(target=self._ntp_update)
+            self._ntp_thread.daemon = True
             return True
         return False
 
@@ -61,4 +70,5 @@ class Ntp(object):
                 sleep(1)
                 continue
 
+            prev_time = time()
             NtpDate(self.config["servers"])

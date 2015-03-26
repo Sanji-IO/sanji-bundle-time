@@ -63,8 +63,12 @@ class Index(Sanji):
             code = 400 if not isinstance(e, RuntimeWarning) else 500
             return response(code=code, data={"message": str(e)})
 
+        realtime_data = {
+            "time": SysTime.get_system_time()
+        }
+
         # operation successed
-        return response()
+        return response(data=dict(self.config.items() + realtime_data.items()))
 
 if __name__ == "__main__":
     from sanji.connection.mqtt import Mqtt

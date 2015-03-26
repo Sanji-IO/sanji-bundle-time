@@ -8,6 +8,7 @@ import logging
 import unittest
 
 from mock import Mock
+from mock import ANY
 from mock import patch
 
 from sanji.connection.mockup import Mockup
@@ -48,6 +49,16 @@ class TestIndexClass(unittest.TestCase):
         resp.assert_called_once_with(data=result)
 
     def test_put(self):
+        result = {
+            "time": ANY,
+            "timezone": ANY,
+            "ntp": {
+                "enable": ANY,
+                "servers": ANY,
+                "interval": ANY
+            }
+        }
+
         # case 1: no input parameters
         resp = Mock()
         msg = Message({"data": {}})
@@ -61,7 +72,7 @@ class TestIndexClass(unittest.TestCase):
             set_system_timezone.return_value = True
             msg = Message({"data": {"timezone": "+08:00,0"}})
             self.index.put(message=msg, response=resp, test=True)
-            resp.assert_called_once_with()
+            resp.assert_called_once_with(data=result)
 
         # case 3: change timezone (Abnormal 1)
             resp = Mock()
@@ -84,7 +95,7 @@ class TestIndexClass(unittest.TestCase):
             set_system_time.return_value = True
             msg = Message({"data": {"time": ""}})
             self.index.put(message=msg, response=resp, test=True)
-            resp.assert_called_once_with()
+            resp.assert_called_once_with(data=result)
 
         # case 6: change system time (Abnormal 1)
             resp = Mock()
@@ -110,7 +121,7 @@ class TestIndexClass(unittest.TestCase):
                     }
                 })
             self.index.put(message=msg, response=resp, test=True)
-            resp.assert_called_once_with()
+            resp.assert_called_once_with(data=result)
 
         # case 9: update ntp settings (Abnormal 1)
             resp = Mock()
