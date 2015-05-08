@@ -7,7 +7,7 @@ from sanji.core import Route
 from systime.ntp import Ntp
 from systime.systime import SysTime
 
-logger = logging.getLogger()
+_logger = logging.getLogger("sanji.time")
 
 
 class Index(Sanji):
@@ -74,6 +74,6 @@ if __name__ == "__main__":
     from sanji.connection.mqtt import Mqtt
     FORMAT = "%(asctime)s - %(levelname)s - %(lineno)s - %(message)s"
     logging.basicConfig(level=0, format=FORMAT)
-    logger = logging.getLogger("Time")
+    _logger = logging.getLogger("sanji.time")
     index = Index(connection=Mqtt())
     index.start()

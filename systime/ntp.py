@@ -10,15 +10,15 @@ import logging
 import math
 import subprocess
 
-logger = logging.getLogger("Time")
+_logger = logging.getLogger("sanji.time")
 
 
 def NtpDate(servers):
     if not hasattr(servers, 'lower'):
         servers = " ".join(servers)
     rc = subprocess.call(["ntpdate", servers])
-    logger.debug("NTP update %s." % "successfully"
-                 if rc == 0 else "failed")
+    _logger.debug("NTP update %s." % "successfully"
+                  if rc == 0 else "failed")
 
     return rc
 
@@ -46,6 +46,7 @@ class Ntp(object):
         return True
 
     def stop(self):
+        _logger.debug("stop ntp daemon")
         if self._ntp_thread.is_alive():
             self._ntp_deamon_event.set()
             self._ntp_thread.join()
@@ -57,6 +58,7 @@ class Ntp(object):
         return False
 
     def start(self):
+        _logger.debug("start ntp daemon")
         if self._ntp_thread.is_alive():
             raise RuntimeError("Stop previous ntp daemon first.")
 
