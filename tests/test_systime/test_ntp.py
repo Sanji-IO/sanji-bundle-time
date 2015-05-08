@@ -6,7 +6,7 @@ import os
 import sys
 import logging
 import unittest
-
+from sanji.model_initiator import ModelInitiator
 from mock import Mock
 from mock import patch
 
@@ -23,26 +23,29 @@ except ImportError as e:
 class TestFunctionClass(unittest.TestCase):
 
     def test_NtpDate(self):
-        servers = "test.ntp.org"
+        server = "test.ntp.org"
         with patch("systime.ntp.subprocess") as subprocess:
             subprocess.call.return_value = 0
-            NtpDate(servers)
-            subprocess.call.assert_called_once_with(["ntpdate", servers])
+            NtpDate(server)
+            subprocess.call.assert_called_once_with(["ntpdate", server])
 
             subprocess.call.reset_mock()
             subprocess.call.return_value = 1
-            NtpDate(servers)
-            subprocess.call.assert_called_once_with(["ntpdate", servers])
+            NtpDate(server)
+            subprocess.call.assert_called_once_with(["ntpdate", server])
 
 
 class TestNtpClass(unittest.TestCase):
 
     def setUp(self):
-        self.ntp = Ntp({
-            "enable": 0,
-            "servers": ["pool.ntp.org"],
-            "interval": 3600
-        })
+        path_root = os.path.dirname(os.path.realpath(__file__)) + "/../../"
+        try:
+            os.unlink(path_root + "/data/ntp.json")
+            os.unlink(path_root + "/data/ntp.json.backup")
+        except:
+            pass
+        self.model = ModelInitiator("ntp", path_root)
+        self.ntp = Ntp(self.model)
 
     def tearDown(self):
         self.ntp.stop()
@@ -69,21 +72,24 @@ class TestNtpClass(unittest.TestCase):
     def test_update(self):
         self.ntp.stop = Mock()
         self.ntp.start = Mock()
-
         with patch("systime.ntp.NtpDate") as NtpDate:
-            self.ntp.update({"enable": 1})
-            NtpDate.assert_called_once_with(self.ntp.config["servers"])
+            self.ntp.update({
+                "ntp": {
+                    "enable": 1
+                }
+            })
+            NtpDate.assert_called_once_with(self.model.db["ntp"]["server"])
             self.ntp.stop.assert_called_once_with()
             self.ntp.start.assert_called_once_with()
 
     def test__ntp_update(self):
         with patch("systime.ntp.NtpDate") as NtpDate:
-            def stop(servers):
+            def stop(server):
                 self.ntp._ntp_deamon_event.set()
             NtpDate.side_effect = stop
-            self.ntp.config["interval"] = 0.001
+            self.model.db["ntp"]["interval"] = 0.001
             self.ntp._ntp_update()
-            NtpDate.assert_called_once_with(self.ntp.config["servers"])
+            NtpDate.assert_called_once_with(self.model.db["ntp"]["server"])
 
 
 if __name__ == "__main__":
