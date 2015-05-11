@@ -1,0 +1,8 @@
+{
+    "timezone": "+08:00,0", 
+    "ntp": {
+        "enable": 1, 
+        "server": "pool.ntp.org", 
+        "interval": 7200
+    }
+}

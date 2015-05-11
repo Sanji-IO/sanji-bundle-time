@@ -26,6 +26,12 @@ except ImportError as e:
 class TestIndexClass(unittest.TestCase):
 
     def setUp(self):
+        root_path = os.path.dirname(os.path.realpath(__file__)) + "/../"
+        try:
+            os.unlink(root_path + "data/ntp.json")
+            os.unlink(root_path + "data/ntp.json.backup")
+        except:
+            pass
         self.index = Index(connection=Mockup())
 
     def tearDown(self):
@@ -38,8 +44,8 @@ class TestIndexClass(unittest.TestCase):
             "timezone": "+08:00,0",
             "ntp": {
                 "enable": 0,
-                "servers": ["pool.ntp.org"],
-                "interval": 3600
+                "server": "pool.ntp.org",
+                "interval": 7200
             }
         }
         resp = Mock()
@@ -54,7 +60,7 @@ class TestIndexClass(unittest.TestCase):
             "timezone": ANY,
             "ntp": {
                 "enable": ANY,
-                "servers": ANY,
+                "server": ANY,
                 "interval": ANY
             }
         }
