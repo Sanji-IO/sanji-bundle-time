@@ -51,4 +51,4 @@ docs/_build/
 target/
 
 data/*.json.backup
-data/*.json.factory
+data/*.json

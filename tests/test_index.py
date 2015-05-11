@@ -28,8 +28,8 @@ class TestIndexClass(unittest.TestCase):
     def setUp(self):
         root_path = os.path.dirname(os.path.realpath(__file__)) + "/../"
         try:
-            os.unlink(root_path + "/data/ntp.json")
-            os.unlink(root_path + "/data/ntp.json.backup")
+            os.unlink(root_path + "data/ntp.json")
+            os.unlink(root_path + "data/ntp.json.backup")
         except:
             pass
         self.index = Index(connection=Mockup())

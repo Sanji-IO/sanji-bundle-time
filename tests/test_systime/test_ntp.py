@@ -40,8 +40,8 @@ class TestNtpClass(unittest.TestCase):
     def setUp(self):
         path_root = os.path.dirname(os.path.realpath(__file__)) + "/../../"
         try:
-            os.unlink(path_root + "/data/ntp.json")
-            os.unlink(path_root + "/data/ntp.json.backup")
+            os.unlink(path_root + "data/ntp.json")
+            os.unlink(path_root + "data/ntp.json.backup")
         except:
             pass
         self.model = ModelInitiator("ntp", path_root)
