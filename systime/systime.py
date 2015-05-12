@@ -63,7 +63,7 @@ class SysTime(object):
 
     @staticmethod
     def get_system_time():
-        return datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
     @staticmethod
     def set_system_time(time_string):
