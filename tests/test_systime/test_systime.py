@@ -23,8 +23,8 @@ class TestTimeClass(unittest.TestCase):
 
     def test_get_system_time(self):
         self.assertEqual(
-            datetime.now().strftime("%Y-%m-%dT%H:%M")[0:10],
-            SysTime.get_system_time()[0:10])
+            datetime.utcnow().strftime("%Y-%m-%dT%H:%M")[0:13],
+            SysTime.get_system_time()[0:13])
 
     def test_set_system_time(self):
         with patch("systime.systime.subprocess") as subprocess:
