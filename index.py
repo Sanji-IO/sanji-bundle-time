@@ -32,6 +32,14 @@ class Index(Sanji):
     def put(self, message, response):
         rc = None
         try:
+            # update ntp settings
+            if "ntp" in message.data:
+                rc = self.ntp.update(message.data["ntp"])
+                if rc is False:
+                    raise RuntimeWarning("Update ntp settings failed.")
+                self.model.db["ntp"] = dict(self.model.db["ntp"].items()
+                                            + message.data["ntp"].items())
+
             # change timezone
             if "timezone" in message.data:
                 rc = SysTime.set_system_timezone(message.data["timezone"])
@@ -45,20 +53,13 @@ class Index(Sanji):
                 if rc is False:
                     raise RuntimeWarning("Change system time failed.")
 
-            # update ntp settings
-            if "ntp" in message.data:
-                rc = self.ntp.update(message.data["ntp"])
-                if rc is False:
-                    raise RuntimeWarning("Update ntp settings failed.")
-                self.model.db["ntp"] = dict(self.model.db["ntp"].items()
-                                            + message.data["ntp"].items())
-
             if rc is None:
                 return response(code=400,
                                 data={"message": "No input paramters."})
             else:
                 self.model.save_db()
         except Exception as e:
+            _logger.debug(e, exc_info=True)
             code = 400 if not isinstance(e, RuntimeWarning) else 500
             return response(code=code, data={"message": str(e)})
 

@@ -73,11 +73,7 @@ class TestNtpClass(unittest.TestCase):
         self.ntp.stop = Mock()
         self.ntp.start = Mock()
         with patch("systime.ntp.NtpDate") as NtpDate:
-            self.ntp.update({
-                "ntp": {
-                    "enable": 1
-                }
-            })
+            self.ntp.update({"enable": 1})
             NtpDate.assert_called_once_with(self.model.db["ntp"]["server"])
             self.ntp.stop.assert_called_once_with()
             self.ntp.start.assert_called_once_with()

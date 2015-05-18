@@ -34,7 +34,8 @@ class Ntp(object):
     def update(self, config):
         # Update config
         self.model.db["ntp"] = dict(
-            self.model.db["ntp"].items() + config["ntp"].items())
+            self.model.db["ntp"].items() + config.items())
+
         # restart ntp daemon, if enable otherwise stop it.
         self.stop()
         if self.model.db["ntp"]["enable"] == 1:
