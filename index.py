@@ -9,10 +9,25 @@ from sanji.model_initiator import ModelInitiator
 from systime.ntp import Ntp
 from systime.systime import SysTime
 
+from voluptuous import Schema
+from voluptuous import REMOVE_EXTRA
+from voluptuous import Range
+from voluptuous import All
+from voluptuous import Length
+
 _logger = logging.getLogger("sanji.time")
 
 
 class Index(Sanji):
+
+    PUT_SCHEMA = Schema({
+        "timezone": All(str, Length(8)),
+        "ntp": {
+            "enable": All(int, Range(min=0, max=1)),
+            "server": All(str, Length(1, 2048)),
+            "interval": All(int, Range(min=60, max=60*60*24*30))
+        }
+    }, extra=REMOVE_EXTRA)
 
     def init(self, *args, **kwargs):
         path_root = os.path.abspath(os.path.dirname(__file__))
@@ -28,7 +43,7 @@ class Index(Sanji):
         return response(
             data=dict(self.model.db.items() + realtime_data.items()))
 
-    @Route(methods="put", resource="/system/time")
+    @Route(methods="put", resource="/system/time", schema=PUT_SCHEMA)
     def put(self, message, response):
         rc = None
         try:
