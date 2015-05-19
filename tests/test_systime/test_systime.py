@@ -34,7 +34,7 @@ class TestTimeClass(unittest.TestCase):
             ans_t = "032616272015"
             self.assertTrue(SysTime.set_system_time(t))
             subprocess.call.assert_called_with(
-                "date %s; hwclock -w" % ans_t, shell=True)
+                "date --utc %s; hwclock -w" % ans_t, shell=True)
 
             # case 2: command failed
             subprocess.call.return_value = 1
