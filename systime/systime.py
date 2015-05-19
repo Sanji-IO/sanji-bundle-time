@@ -83,7 +83,7 @@ class SysTime(object):
 
         else:
             rc = subprocess.call(
-                "date %s; hwclock -w" % dateTimeString, shell=True)
+                "date --utc %s; hwclock -w" % dateTimeString, shell=True)
 
         return True if rc == 0 else False
 
