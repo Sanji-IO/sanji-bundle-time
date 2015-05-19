@@ -49,9 +49,12 @@ class Index(Sanji):
 
             # manual change sys time
             if "time" in message.data:
-                rc = SysTime.set_system_time(message.data["time"])
-                if rc is False:
-                    raise RuntimeWarning("Change system time failed.")
+                if self.model.db["ntp"]["enable"] == 1:
+                    _logger.debug("NTP enabled. skipping time setup.")
+                else:
+                    rc = SysTime.set_system_time(message.data["time"])
+                    if rc is False:
+                        raise RuntimeWarning("Change system time failed.")
 
             if rc is None:
                 return response(code=400,
