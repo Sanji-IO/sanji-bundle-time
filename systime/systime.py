@@ -8,6 +8,7 @@ from datetime import datetime
 class SysTime(object):
 
     TIMEZONE = {
+        "-12:00,0": "Etc/GMT-12",                  # GMT-12
         "-11:00,0": "Pacific/Samoa",               # SST
         "-10:00,0": "US/Hawaii",                   # HST
         "-09:00,1": "US/Alaska",                   # AKDT
