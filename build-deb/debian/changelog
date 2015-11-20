@@ -1,3 +1,9 @@
+sanji-bundle-time (0.9.4-1) unstable; urgency=low
+
+  * Sync to RTC while using NTP.
+
+ -- Aeluin Chen <aeluin.chen@moxa.com>  Fri, 20 Nov 2015 13:50:48 +0800
+
 sanji-bundle-time (0.9.3-1) unstable; urgency=low
 
   * build-deb/ added for building Debian package.
