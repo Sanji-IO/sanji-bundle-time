@@ -23,7 +23,7 @@ class Index(Sanji):
     PUT_SCHEMA = Schema({
         "timezone": All(str, Length(8)),
         "ntp": {
-            "enable": All(int, Range(min=0, max=1)),
+            "enable": bool,
             "server": All(str, Length(1, 2048)),
             "interval": All(int, Range(min=60, max=60*60*24*30))
         }
@@ -52,8 +52,8 @@ class Index(Sanji):
                 rc = self.ntp.update(message.data["ntp"])
                 if rc is False:
                     raise RuntimeWarning("Update ntp settings failed.")
-                self.model.db["ntp"] = dict(self.model.db["ntp"].items()
-                                            + message.data["ntp"].items())
+                self.model.db["ntp"] = dict(self.model.db["ntp"].items() +
+                                            message.data["ntp"].items())
 
             # change timezone
             if "timezone" in message.data:
@@ -64,7 +64,7 @@ class Index(Sanji):
 
             # manual change sys time
             if "time" in message.data:
-                if self.model.db["ntp"]["enable"] == 1:
+                if self.model.db["ntp"]["enable"] is True:
                     _logger.debug("NTP enabled. skipping time setup.")
                 else:
                     rc = SysTime.set_system_time(message.data["time"])

@@ -1,0 +1,109 @@
+swagger: '2.0'
+
+info:
+  title: System Time API
+  description: System Time management
+  version: '0.0.1'
+
+schemes:
+- http
+- https
+
+produces:
+- application/json
+
+paths:
+  /system/time:
+    get:
+      description: Get current time settings
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: '#/definitions/Time'
+          examples:
+            {
+              "application/json": {
+                $ref: '#/externalDocs/x-mocks/TimeExample'
+              }
+            }
+
+    put:
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Time'
+      description: Update time settings
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: '#/definitions/Time'
+          examples:
+            {
+              "application/json": {
+                $ref: '#/externalDocs/x-mocks/TimeExample'
+              }
+            }
+
+definitions:
+  Time:
+    description: Time configuration
+    type: object
+    properties:
+      time:
+        description: 'Current system time (format: iso 8601)'
+        type: string
+      timezone:
+        description: Current timezone
+        type: string
+      ntp:
+        $ref: '#/definitions/NTP'
+    example:
+        $ref: '#/externalDocs/x-mocks/TimeExample'
+
+  NTP:
+    description: NTP configuration
+    type: object
+    required:
+    - enable
+    - server
+    - interval
+    properties:
+      enable:
+        description: Enable NTP client
+        type: boolean
+      server:
+        description: Target NTP server
+        type: string
+        minLength: 1
+        maxLength: 2048
+      interval:
+        description: 'Time sync interval in seconds (at least: 60 seconds.)'
+        type: integer
+        minimum: 60
+        maximum: 2592000
+    example:
+      $ref: '#/externalDocs/x-mocks/NTPExample'
+
+externalDocs:
+  url: '#'
+  x-mocks:
+    TimeExample:
+      {
+          "time": "2015-03-26T16:27:48.611441Z",
+          "timezone": "+08:00,0",
+          "ntp": {
+            "enable": true,
+            "server": "pool.ntp.org",
+            "interval": 86400
+          }
+      }
+    NTPExample:
+      {
+        "enable": false,
+        "server": "pool.ntp.org",
+        "interval": 86400
+      }
