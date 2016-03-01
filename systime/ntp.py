@@ -35,7 +35,7 @@ class Ntp(object):
         self._ntp_deamon_event = Event()
         self._ntp_thread = Thread(target=self._ntp_update)
         self._ntp_thread.daemon = True
-        if self.model.db["ntp"]["enable"] == 1:
+        if self.model.db["ntp"]["enable"] is True:
             self.start()
 
     def update(self, config):
@@ -45,7 +45,7 @@ class Ntp(object):
 
         # restart ntp daemon, if enable otherwise stop it.
         self.stop()
-        if self.model.db["ntp"]["enable"] == 1:
+        if self.model.db["ntp"]["enable"] is True:
             NtpDate(self.model.db["ntp"]["server"])
             self.start()
 
