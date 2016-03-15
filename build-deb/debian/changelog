@@ -1,3 +1,9 @@
+sanji-bundle-time (1.0.1-1) unstable; urgency=low
+
+  * Fix wrong schema.
+
+ -- Zack YL Shih <ZackYL.Shih@moxa.com>  Tue, 15 Mar 2016 16:34:52 +0800
+
 sanji-bundle-time (1.0.0-1) unstable; urgency=low
 
   * Update API.
