@@ -21,6 +21,7 @@ _logger = logging.getLogger("sanji.time")
 class Index(Sanji):
 
     PUT_SCHEMA = Schema({
+        "time": All(str, Length(1, 255)),
         "timezone": All(str, Length(8)),
         "ntp": {
             "enable": bool,
