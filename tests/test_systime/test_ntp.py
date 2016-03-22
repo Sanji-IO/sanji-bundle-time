@@ -27,12 +27,12 @@ class TestFunctionClass(unittest.TestCase):
         with patch("systime.ntp.subprocess") as subprocess:
             subprocess.call.return_value = 0
             NtpDate(server)
-            subprocess.call.assert_called_once_with(["ntpdate", server])
+            subprocess.call.assert_any_call("hwclock -w", shell=True)
 
             subprocess.call.reset_mock()
             subprocess.call.return_value = 1
             NtpDate(server)
-            subprocess.call.assert_called_once_with(["ntpdate", server])
+            subprocess.call.assert_any_call(["ntpdate", server])
 
 
 class TestNtpClass(unittest.TestCase):
