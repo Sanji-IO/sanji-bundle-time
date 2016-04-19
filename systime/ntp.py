@@ -80,5 +80,9 @@ class Ntp(object):
                 sleep(1)
                 continue
 
-            prev_time = time()
-            NtpDate(self.model.db["ntp"]["server"])
+            try:
+                NtpDate(self.model.db["ntp"]["server"])
+            except Exception as e:
+                _logger.warning(e)
+            finally:
+                prev_time = time()
