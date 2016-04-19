@@ -8,24 +8,25 @@ from threading import Thread
 
 import logging
 import math
-import subprocess
+import sh
 
 _logger = logging.getLogger("sanji.time")
 
 
 def NtpDate(server):
-    rc = subprocess.call(["ntpdate", server])
-    _logger.debug("NTP update %s." % "successfully"
-                  if rc == 0 else "failed")
-    if rc != 0:
-        return rc
+    try:
+        sh.ntpdate(server, _timeout=30)
+        _logger.info("NTP update successfully")
+    except Exception as e:
+        _logger.info("NTP update failed")
+        _logger.warning(e)
+        return
 
-    # Sync to RTC
-    rc = subprocess.call("hwclock -w", shell=True)
-    if rc == 0:
-        _logger.debug("Failed to sync to RTC")
-
-    return rc
+    try:
+        sh.hwclock("-w", _timeout=10)
+    except Exception as e:
+        _logger.info("Failed to sync to RTC")
+        _logger.warning(e)
 
 
 class Ntp(object):
