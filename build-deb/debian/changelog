@@ -1,3 +1,11 @@
+sanji-bundle-time (1.0.2-1) unstable; urgency=low
+
+  * Use sh instead of subprocess.call.
+  * Fix buggy sync.
+
+
+ -- Zack YL Shih <ZackYL.Shih@moxa.com>  Tue, 19 Apr 2016 16:28:12 +0800
+
 sanji-bundle-time (1.0.1-1) unstable; urgency=low
 
   * Fix wrong schema.
