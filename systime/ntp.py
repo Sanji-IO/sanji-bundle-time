@@ -9,6 +9,7 @@ from threading import Thread
 import logging
 import math
 import sh
+from sh import TimeoutException
 
 _logger = logging.getLogger("sanji.time")
 
@@ -17,6 +18,8 @@ def NtpDate(server):
     try:
         sh.ntpdate(server, _timeout=30)
         _logger.info("NTP update successfully")
+    except TimeoutException:
+        _logger.info("NTP update timeout or system date has been changed")
     except Exception as e:
         _logger.info("NTP update failed")
         _logger.warning(e)
