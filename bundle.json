@@ -3,7 +3,7 @@
   "version": "1.0.3",
   "author": "Zack YL Shih",
   "email": "ZackYL.Shih@moxa.com",
-  "description": "System time management.",
+  "description": "Provides the system-time management function",
   "license": "MOXA",
   "main": "index.py",
   "argument": "",
