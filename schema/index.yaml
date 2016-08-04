@@ -3,7 +3,7 @@ swagger: '2.0'
 info:
   title: System Time API
   description: System Time management
-  version: '0.0.1'
+  version: '1.0.0'
 
 schemes:
 - http
@@ -48,6 +48,27 @@ paths:
               }
             }
 
+  /system/zoneinfo:
+    get:
+      description: Get current timezone information
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: '#/definitions/Timezone'
+          examples:
+            {
+              "application/json": {
+                $ref: '#/externalDocs/x-mocks/TimezoneInfoExample'
+              }
+            }
+
+    post:
+      description: Update timezone information from internet
+      responses:
+        200:
+          description: success
+
 definitions:
   Time:
     description: Time configuration
@@ -88,13 +109,63 @@ definitions:
     example:
       $ref: '#/externalDocs/x-mocks/NTPExample'
 
+  Timezone:
+    description: Timezone information
+    type: object
+    required:
+    - zone
+    - iso3166
+    properties:
+      zone:
+        description: TZ zone list with cca2 and TZ
+        readOnly: true
+        type: array
+        items:
+          $ref: '#/definitions/TimezoneZone'
+      iso3166:
+        description: ISO 3166 alpha-2 country codes
+        readOnly: true
+        type: array
+        items:
+          $ref: '#/definitions/TimezoneIso3166'
+
+  TimezoneZone:
+    description: ISO 3166 alpha-2 country code and zone name
+    type: object
+    required:
+    - cca2
+    - name
+    properties:
+      cca2:
+        description: ISO 3166 alpha-2 country code
+        type: string
+        pattern: '[A-Z]{2}'
+      name:
+        description: zone name
+        type: string
+
+  TimezoneIso3166:
+    description: ISO 3166 alpha-2 country code and country name
+    type: object
+    required:
+    - cca2
+    - name
+    properties:
+      cca2:
+        description: ISO 3166 alpha-2 country code
+        type: string
+        pattern: '[A-Z]{2}'
+      name:
+        description: The usual English name for the coded region
+        type: string
+
 externalDocs:
   url: '#'
   x-mocks:
     TimeExample:
       {
           "time": "2015-03-26T16:27:48.611441Z",
-          "timezone": "+08:00,0",
+          "timezone": "Asia/Taipei",
           "ntp": {
             "enable": true,
             "server": "pool.ntp.org",
@@ -106,4 +177,35 @@ externalDocs:
         "enable": false,
         "server": "pool.ntp.org",
         "interval": 86400
+      }
+    TimezoneInfoExample:
+      {
+        "zone": [
+          {
+            "cca2": "AD",
+            "name": "Europe/Andorra",
+          },
+          {
+            "cca2": "AE",
+            "name": "Asia/Dubai",
+          },
+          {
+            "cca2": "AF",
+            "name": "Asia/Kabul",
+          }
+        ],
+        "iso3166": [
+          {
+            "cca2": "AD",
+            "name": "Andorra"
+          },
+          {
+            "cca2": "AE",
+            "name": "United Arab Emirates"
+          },
+          {
+            "cca2": "AF",
+            "name": "Afghanistan"
+          }
+        ]
       }
