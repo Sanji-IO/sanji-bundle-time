@@ -1,3 +1,9 @@
+sanji-bundle-time (2.0.0-1) unstable; urgency=low
+
+  * BugFix: Wrong timezone list.
+
+ -- Aeluin Chen <aeluin.chen@moxa.com>  Fri, 21 Oct 2016 14:32:27 +0800
+
 sanji-bundle-time (1.0.3-1) unstable; urgency=low
 
   * Enhance error message.
