@@ -41,7 +41,7 @@ class TestIndexClass(unittest.TestCase):
     def test_get(self):
         result = {
             "time": "2015-03-26T16:27:48.611441Z",
-            "timezone": "+08:00,0",
+            "timezone": "Asia/Taipei",
             "ntp": {
                 "enable": 0,
                 "server": "pool.ntp.org",
@@ -76,24 +76,24 @@ class TestIndexClass(unittest.TestCase):
         with patch("index.SysTime.set_system_timezone") as set_system_timezone:
             resp = Mock()
             set_system_timezone.return_value = True
-            msg = Message({"data": {"timezone": "+08:00,0"}})
+            msg = Message({"data": {"timezone": "Asia/Taipei"}})
             self.index.put(message=msg, response=resp, test=True)
             resp.assert_called_once_with(data=result)
 
         # case 3: change timezone (Abnormal 1)
             resp = Mock()
             set_system_timezone.return_value = False
-            msg = Message({"data": {"timezone": "+08:00,0"}})
+            msg = Message({"data": {"timezone": "Asia/Taipei"}})
             self.index.put(message=msg, response=resp, test=True)
             resp.assert_called_once_with(
                 code=500, data={"message": "Change timezone failed."})
 
         # case 4: change timezone (Abnormal 2)
         resp = Mock()
-        msg = Message({"data": {"timezone": "+13:00,1"}})
+        msg = Message({"data": {"timezone": "Asia/Taipe"}})
         self.index.put(message=msg, response=resp, test=True)
         resp.assert_called_once_with(
-            code=400, data={"message": "Timezone string error."})
+            code=400, data={"message": "Timezone not exist."})
 
         # case 5: change system time (Normal)
         with patch("index.SysTime.set_system_time") as set_system_time:

@@ -22,7 +22,7 @@ class Index(Sanji):
 
     PUT_SCHEMA = Schema({
         "time": All(str, Length(1, 255)),
-        "timezone": All(str, Length(0,255)),
+        "timezone": All(str, Length(0, 255)),
         "ntp": {
             "enable": bool,
             "server": All(str, Length(1, 2048)),
@@ -48,7 +48,7 @@ class Index(Sanji):
     def get_zoneinfo(self, message, response):
         zoneinfo = SysTime.get_system_timezone_list()
 
-        return response(data = dict(zoneinfo))
+        return response(data=dict(zoneinfo))
 
     @Route(methods="put", resource="/system/time", schema=PUT_SCHEMA)
     def put(self, message, response):
