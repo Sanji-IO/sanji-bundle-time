@@ -1,66 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
+import os
 import subprocess
 from datetime import datetime
 
 
 class SysTime(object):
 
-    TIMEZONE = {
-        "-12:00,0": "Etc/GMT-12",                  # GMT-12
-        "-11:00,0": "Pacific/Samoa",               # SST
-        "-10:00,0": "US/Hawaii",                   # HST
-        "-09:00,1": "US/Alaska",                   # AKDT
-        "-08:00,1": "Pacific",                     # PDT
-        "-07:00,0": "US/Arizona",                  # MST
-        "-07:00,1": "US/Mountain",                 # MDT
-        "-06:00,0": "Canada/Saskatchewan",         # CST
-        "-06:00,1": "US/Central",                  # CDT
-        "-05:00,0": "America/Bogota",              # COT
-        "-05:00,1": "US/Eastern",                  # EDT
-        "-04:00,1": "America/Manaus",              # AMT
-        "-04:00,0": "America/Caracas",             # VET
-        "-03:30,1": "Canada/Newfoundland",         # NDT
-        "-03:00,1": "America/Montevideo",          # UYT
-        "-03:00,0": "right/America/Buenos_Aires",  # ART
-        "-02:00,1": "America/Noronha",             # FNT
-        "-01:00,1": "Atlantic/Azores",             # AZOST
-        "-01:00,0": "Atlantic/Cape_Verde",         # CVT
-        "-00:00,0": "Africa/Casablanca",           # WET
-        "-00:00,1": "Europe/London",               # BST
-        "+01:00,1": "Europe/Amsterdam",            # CEST
-        "+01:00,0": "Africa/Gaborone",             # CAT    +02:00??
-        "+02:00,1": "Asia/Amman",                  # EET    +02:00??
-        "+02:00,0": "Africa/Harare",               # CAT    +02:00??
-        "+03:00,1": "Asia/Baghdad",                # AST
-        "+03:00,0": "Asia/Kuwait",                 # AST
-        "+03:30,0": "Asia/Tehran",                 # IRDT
-        "+04:00,0": "Asia/Muscat",                 # GST
-        "+04:00,1": "Asia/Baku",                   # AZST
-        "+04:30,0": "Asia/Kabul",                  # AFT
-        "+05:00,1": "Asia/Oral",                   # ORAT
-        "+05:00,0": "Asia/Karachi",                # PKT
-        "+05:30,0": "Asia/Kolkata",                # IST
-        "+05:45,0": "Asia/Katmandu",               # NPT
-        "+06:00,0": "Asia/Dhaka",                  # BDT
-        "+06:00,1": "Asia/Almaty",                 # ALMT
-        "+06:30,0": "Asia/Rangoon",                # MMT
-        "+07:00,1": "Asia/Krasnoyarsk",            # KRAST
-        "+07:00,0": "Asia/Bangkok",                # ICT
-        "+08:00,0": "Asia/Taipei",                 # CST
-        "+08:00,1": "Asia/Irkutsk",                # IRKST
-        "+09:00,1": "Asia/Yakutsk",                # YAKST
-        "+09:00,0": "Asia/Tokyo",                  # JST
-        "+09:30,0": "Australia/Darwin",            # CST
-        "+09:30,1": "Australia/Adelaide",          # CST
-        "+10:00,0": "Australia/Brisbane",          # EST
-        "+10:00,1": "Australia/Canberra",          # EST
-        "+11:00,0": "Asia/Magadan",                # MAGST
-        "+12:00,1": "Pacific/Auckland",            # NZDT
-        "+12:00,0": "Pacific/Fiji",                # FJT
-        "+13:00,0": "Pacific/Tongatapu",           # TOT
-    }
+    ZONEINFO_PATH = "/usr/share/zoneinfo"
+    ZONETAB_PATH = "{}/zone.tab".format(ZONEINFO_PATH)
+    ISO3166TAB_PATH = "{}/iso3166.tab".format(ZONEINFO_PATH)
 
     @staticmethod
     def get_system_time():
@@ -89,19 +39,42 @@ class SysTime(object):
         return True if rc == 0 else False
 
     @staticmethod
+    def get_system_timezone_list():
+        """
+        return timezone list
+        """
+        # list zone.tab
+        zonetab = []
+        with open(SysTime.ZONETAB_PATH, "rb") as f:
+            for line in f:
+                if not line.startswith("#"):
+                    zone = line.rstrip().split("\t")
+                    zonetab.append({"cca2": zone[0], "name": zone[2]})
+
+        # list iso3166.tab
+        iso3166tab = []
+        with open(SysTime.ISO3166TAB_PATH, "rb") as f:
+            for line in f:
+                if not line.startswith("#"):
+                    zone = line.rstrip().split("\t")
+                    iso3166tab.append({"cca2": zone[0], "name": zone[1]})
+
+        return {"zone": zonetab, "iso3166": iso3166tab}
+
+    @staticmethod
     def set_system_timezone(timezone):
         """
-        tz_string should be listed in Time.TIMEZONE
+        timezone should be existed in /usr/share/zoneinfo
         Exception:
             ValueError if timezone sting is wrong
         """
-        if timezone in SysTime.TIMEZONE:
+        if os.path.isfile("{}/{}".format(SysTime.ZONEINFO_PATH, timezone)):
             rc = subprocess.call("echo \"%s\" > /etc/timezone;" %
-                                 SysTime.TIMEZONE[timezone] +
+                                 timezone +
                                  "dpkg-reconfigure -f noninteractive tzdata",
                                  shell=True)
 
         else:
-            raise ValueError('Timezone string error.')
+            raise ValueError('Timezone not exist.')
 
         return True if rc == 0 else False

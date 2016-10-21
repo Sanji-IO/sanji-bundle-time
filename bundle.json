@@ -1,6 +1,6 @@
 {
   "name": "time",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "author": "Zack YL Shih",
   "email": "ZackYL.Shih@moxa.com",
   "description": "Provides the system-time management function",
@@ -17,6 +17,10 @@
     {
       "methods": ["get", "put"],
       "resource": "/system/time"
+    },
+    {
+      "methods": ["get"],
+      "resource": "/system/zoneinfo"
     }
   ]
 }

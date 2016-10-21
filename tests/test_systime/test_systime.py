@@ -48,15 +48,15 @@ class TestTimeClass(unittest.TestCase):
         with patch("systime.systime.subprocess") as subprocess:
             # case 1: command success
             subprocess.call.return_value = 1
-            self.assertFalse(SysTime.set_system_timezone("+07:00,0"))
+            self.assertFalse(SysTime.set_system_timezone("Asia/Bangkok"))
 
             # case 2: command failed
             subprocess.call.return_value = 0
-            self.assertTrue(SysTime.set_system_timezone("+06:00,0"))
+            self.assertTrue(SysTime.set_system_timezone("Asia/Dhaka"))
 
             # case 3: invaild timezone string
             with self.assertRaises(ValueError):
-                SysTime.set_system_timezone("+06:00,3")
+                SysTime.set_system_timezone("Asia/Puli")
 
 
 if __name__ == "__main__":
