@@ -17,6 +17,10 @@
     {
       "methods": ["get", "put"],
       "resource": "/system/time"
+    },
+    {
+      "methods": ["get"],
+      "resource": "/system/zoneinfo"
     }
   ]
 }
