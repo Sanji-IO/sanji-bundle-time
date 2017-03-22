@@ -4,6 +4,7 @@
 import os
 import subprocess
 from datetime import datetime
+import dateutil.tz as tz
 
 
 class SysTime(object):
@@ -14,7 +15,7 @@ class SysTime(object):
 
     @staticmethod
     def get_system_time():
-        return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        return datetime.now(tz.tzlocal()).strftime("%Y-%m-%dT%H:%M:%S.%f%z")
 
     @staticmethod
     def set_system_time(time_string):
