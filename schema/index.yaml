@@ -137,6 +137,7 @@ definitions:
     required:
     - cca2
     - name
+    - offset
     properties:
       cca2:
         description: ISO 3166 alpha-2 country code
@@ -144,6 +145,9 @@ definitions:
         pattern: '[A-Z]{2}'
       name:
         description: zone name
+        type: string
+      offset:
+        description: zone offset (format should be "+0800", etc)
         type: string
 
   TimezoneIso3166:

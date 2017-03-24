@@ -50,7 +50,11 @@ class SysTime(object):
             for line in f:
                 if not line.startswith("#"):
                     zone = line.rstrip().split("\t")
-                    zonetab.append({"cca2": zone[0], "name": zone[2]})
+                    zonetab.append({
+                        "cca2": zone[0],
+                        "name": zone[2],
+                        "offset": datetime.now(
+                            tz.gettz(zone[2])).strftime("%z")})
 
         # list iso3166.tab
         iso3166tab = []
