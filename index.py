@@ -14,16 +14,23 @@ from voluptuous import REMOVE_EXTRA
 from voluptuous import Range
 from voluptuous import All
 from voluptuous import Length
+from voluptuous import Optional
+from datetime import datetime
 
 _logger = logging.getLogger("sanji.time")
+
+
+def Timestamp(value):
+    datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%fZ")
+    return value
 
 
 class Index(Sanji):
 
     PUT_SCHEMA = Schema({
-        "time": All(str, Length(1, 255)),
-        "timezone": All(str, Length(0, 255)),
-        "ntp": {
+        Optional("time"): Timestamp,
+        Optional("timezone"): All(str, Length(0, 255)),
+        Optional("ntp"): {
             "enable": bool,
             "server": All(str, Length(1, 2048)),
             "interval": All(int, Range(min=60, max=60*60*24*30))
