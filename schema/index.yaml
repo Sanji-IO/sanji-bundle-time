@@ -3,7 +3,7 @@ swagger: '2.0'
 info:
   title: System Time API
   description: System Time management
-  version: '1.0.0'
+  version: '1.1.0'
 
 schemes:
 - http
@@ -190,14 +190,17 @@ externalDocs:
           {
             "cca2": "AD",
             "name": "Europe/Andorra",
+            "offset": "+0100"
           },
           {
             "cca2": "AE",
             "name": "Asia/Dubai",
+            "offset": "+0400"
           },
           {
             "cca2": "AF",
             "name": "Asia/Kabul",
+            "offset": "+0430"
           }
         ],
         "iso3166": [
