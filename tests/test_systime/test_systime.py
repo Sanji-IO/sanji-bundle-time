@@ -23,7 +23,7 @@ class TestTimeClass(unittest.TestCase):
 
     def test_get_system_time(self):
         self.assertEqual(
-            datetime.now().strftime("%Y-%m-%dT%H:%M")[0:13],
+            datetime.utcnow().strftime("%Y-%m-%dT%H:%M")[0:13],
             SysTime.get_system_time()[0:13])
 
     def test_set_system_time(self):
@@ -42,7 +42,7 @@ class TestTimeClass(unittest.TestCase):
 
             # case 3: invaild input
             with self.assertRaises(ValueError):
-                SysTime.set_system_time("2015-0-26T16:27:48.611441Z")
+                SysTime.set_system_time("2015-0-26T16:27:48.611441+0800")
 
     def test_set_system_timezone(self):
         with patch("systime.systime.subprocess") as subprocess:

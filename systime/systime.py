@@ -15,7 +15,7 @@ class SysTime(object):
 
     @staticmethod
     def get_system_time():
-        return datetime.now(tz.tzlocal()).strftime("%Y-%m-%dT%H:%M:%S.%f%z")
+        return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
     @staticmethod
     def set_system_time(time_string):
@@ -50,7 +50,11 @@ class SysTime(object):
             for line in f:
                 if not line.startswith("#"):
                     zone = line.rstrip().split("\t")
-                    zonetab.append({"cca2": zone[0], "name": zone[2]})
+                    zonetab.append({
+                        "cca2": zone[0],
+                        "name": zone[2],
+                        "offset": datetime.now(
+                            tz.gettz(zone[2])).strftime("%z")})
 
         # list iso3166.tab
         iso3166tab = []
