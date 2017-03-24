@@ -103,6 +103,7 @@ class Index(Sanji):
         return response(
             data=dict(self.model.db.items() + realtime_data.items()))
 
+
 if __name__ == "__main__":
     from sanji.connection.mqtt import Mqtt
     FORMAT = "%(asctime)s - %(levelname)s - %(lineno)s - %(message)s"
