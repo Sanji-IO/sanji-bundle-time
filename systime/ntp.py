@@ -40,6 +40,7 @@ class Ntp(object):
         self._ntp_thread = Thread(target=self._ntp_update)
         self._ntp_thread.daemon = True
         if self.model.db["ntp"]["enable"] is True:
+            NtpDate(self.model.db["ntp"]["server"])
             self.start()
 
     def update(self, config):
