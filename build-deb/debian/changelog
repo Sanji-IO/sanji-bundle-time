@@ -1,3 +1,54 @@
+sanji-bundle-time (2.1.1-1) unstable; urgency=low
+
+  * fix: Sync time at startup.
+
+ -- Aeluin Chen <aeluin.chen@moxa.com>  Fri, 31 Mar 2017 11:39:38 +0800
+
+sanji-bundle-time (2.1.0-1) unstable; urgency=low
+
+  * fix: Use "UTC" instead of local time.
+  * feat: Provide timezone offset in zoneinfo.
+
+ -- Aeluin Chen <aeluin.chen@moxa.com>  Fri, 24 Mar 2017 17:38:47 +0800
+
+sanji-bundle-time (2.0.1-1) unstable; urgency=low
+
+  * fix: Pass local time instead of UTC.
+
+ -- Aeluin Chen <aeluin.chen@moxa.com>  Wed, 22 Mar 2017 14:07:03 +0800
+
+sanji-bundle-time (2.0.0-1) unstable; urgency=low
+
+  * BugFix: Wrong timezone list.
+
+ -- Aeluin Chen <aeluin.chen@moxa.com>  Fri, 21 Oct 2016 14:32:27 +0800
+
+sanji-bundle-time (1.0.3-1) unstable; urgency=low
+
+  * Enhance error message.
+
+ -- Zack YL Shih <ZackYL.Shih@moxa.com>  Tue, 19 Apr 2016 17:09:14 +0800
+
+sanji-bundle-time (1.0.2-1) unstable; urgency=low
+
+  * Use sh instead of subprocess.call.
+  * Fix buggy sync.
+
+
+ -- Zack YL Shih <ZackYL.Shih@moxa.com>  Tue, 19 Apr 2016 16:28:12 +0800
+
+sanji-bundle-time (1.0.1-1) unstable; urgency=low
+
+  * Fix wrong schema.
+
+ -- Zack YL Shih <ZackYL.Shih@moxa.com>  Tue, 15 Mar 2016 16:34:52 +0800
+
+sanji-bundle-time (1.0.0-1) unstable; urgency=low
+
+  * Update API.
+
+ -- Zack YL Shih <ZackYL.Shih@moxa.com>  Tue, 01 Mar 2016 14:31:22 +0800
+
 sanji-bundle-time (0.9.4-1) unstable; urgency=low
 
   * Sync to RTC while using NTP.

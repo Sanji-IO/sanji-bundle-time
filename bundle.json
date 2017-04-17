@@ -1,9 +1,9 @@
 {
   "name": "time",
-  "version": "0.9.4",
+  "version": "2.1.1",
   "author": "Zack YL Shih",
   "email": "ZackYL.Shih@moxa.com",
-  "description": "System time management.",
+  "description": "Provides the system-time management function",
   "license": "MOXA",
   "main": "index.py",
   "argument": "",
@@ -17,6 +17,10 @@
     {
       "methods": ["get", "put"],
       "resource": "/system/time"
+    },
+    {
+      "methods": ["get"],
+      "resource": "/system/zoneinfo"
     }
   ]
 }

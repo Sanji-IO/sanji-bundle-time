@@ -14,16 +14,24 @@ from voluptuous import REMOVE_EXTRA
 from voluptuous import Range
 from voluptuous import All
 from voluptuous import Length
+from voluptuous import Optional
+from datetime import datetime
 
 _logger = logging.getLogger("sanji.time")
+
+
+def Timestamp(value):
+    datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%fZ")
+    return value
 
 
 class Index(Sanji):
 
     PUT_SCHEMA = Schema({
-        "timezone": All(str, Length(8)),
-        "ntp": {
-            "enable": All(int, Range(min=0, max=1)),
+        Optional("time"): Timestamp,
+        Optional("timezone"): All(str, Length(0, 255)),
+        Optional("ntp"): {
+            "enable": bool,
             "server": All(str, Length(1, 2048)),
             "interval": All(int, Range(min=60, max=60*60*24*30))
         }
@@ -43,6 +51,12 @@ class Index(Sanji):
         return response(
             data=dict(self.model.db.items() + realtime_data.items()))
 
+    @Route(methods="get", resource="/system/zoneinfo")
+    def get_zoneinfo(self, message, response):
+        zoneinfo = SysTime.get_system_timezone_list()
+
+        return response(data=dict(zoneinfo))
+
     @Route(methods="put", resource="/system/time", schema=PUT_SCHEMA)
     def put(self, message, response):
         rc = None
@@ -52,8 +66,8 @@ class Index(Sanji):
                 rc = self.ntp.update(message.data["ntp"])
                 if rc is False:
                     raise RuntimeWarning("Update ntp settings failed.")
-                self.model.db["ntp"] = dict(self.model.db["ntp"].items()
-                                            + message.data["ntp"].items())
+                self.model.db["ntp"] = dict(self.model.db["ntp"].items() +
+                                            message.data["ntp"].items())
 
             # change timezone
             if "timezone" in message.data:
@@ -64,7 +78,7 @@ class Index(Sanji):
 
             # manual change sys time
             if "time" in message.data:
-                if self.model.db["ntp"]["enable"] == 1:
+                if self.model.db["ntp"]["enable"] is True:
                     _logger.debug("NTP enabled. skipping time setup.")
                 else:
                     rc = SysTime.set_system_time(message.data["time"])
@@ -88,6 +102,7 @@ class Index(Sanji):
         # operation successed
         return response(
             data=dict(self.model.db.items() + realtime_data.items()))
+
 
 if __name__ == "__main__":
     from sanji.connection.mqtt import Mqtt

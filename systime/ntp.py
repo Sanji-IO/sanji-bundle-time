@@ -8,24 +8,28 @@ from threading import Thread
 
 import logging
 import math
-import subprocess
+import sh
+from sh import TimeoutException
 
 _logger = logging.getLogger("sanji.time")
 
 
 def NtpDate(server):
-    rc = subprocess.call(["ntpdate", server])
-    _logger.debug("NTP update %s." % "successfully"
-                  if rc == 0 else "failed")
-    if rc != 0:
-        return rc
+    try:
+        sh.ntpdate(server, _timeout=30)
+        _logger.info("NTP update successfully")
+    except TimeoutException:
+        _logger.info("NTP update timeout or system date has been changed")
+    except Exception as e:
+        _logger.info("NTP update failed")
+        _logger.warning(e)
+        return
 
-    # Sync to RTC
-    rc = subprocess.call("hwclock -w", shell=True)
-    if rc == 0:
-        _logger.debug("Failed to sync to RTC")
-
-    return rc
+    try:
+        sh.hwclock("-w", _timeout=10)
+    except Exception as e:
+        _logger.info("Failed to sync to RTC")
+        _logger.warning(e)
 
 
 class Ntp(object):
@@ -35,7 +39,8 @@ class Ntp(object):
         self._ntp_deamon_event = Event()
         self._ntp_thread = Thread(target=self._ntp_update)
         self._ntp_thread.daemon = True
-        if self.model.db["ntp"]["enable"] == 1:
+        if self.model.db["ntp"]["enable"] is True:
+            NtpDate(self.model.db["ntp"]["server"])
             self.start()
 
     def update(self, config):
@@ -45,7 +50,7 @@ class Ntp(object):
 
         # restart ntp daemon, if enable otherwise stop it.
         self.stop()
-        if self.model.db["ntp"]["enable"] == 1:
+        if self.model.db["ntp"]["enable"] is True:
             NtpDate(self.model.db["ntp"]["server"])
             self.start()
 
@@ -79,5 +84,9 @@ class Ntp(object):
                 sleep(1)
                 continue
 
-            prev_time = time()
-            NtpDate(self.model.db["ntp"]["server"])
+            try:
+                NtpDate(self.model.db["ntp"]["server"])
+            except Exception as e:
+                _logger.warning(e)
+            finally:
+                prev_time = time()

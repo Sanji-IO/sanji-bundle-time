@@ -24,15 +24,11 @@ class TestFunctionClass(unittest.TestCase):
 
     def test_NtpDate(self):
         server = "test.ntp.org"
-        with patch("systime.ntp.subprocess") as subprocess:
-            subprocess.call.return_value = 0
+        with patch("systime.ntp.sh") as sh:
+            sh.ntpdate = Mock()
             NtpDate(server)
-            subprocess.call.assert_any_call("hwclock -w", shell=True)
-
-            subprocess.call.reset_mock()
-            subprocess.call.return_value = 1
-            NtpDate(server)
-            subprocess.call.assert_any_call(["ntpdate", server])
+            sh.ntpdate.assert_called_once_with("test.ntp.org", _timeout=30)
+            sh.hwclock.assert_called_once_with("-w", _timeout=10)
 
 
 class TestNtpClass(unittest.TestCase):
@@ -73,7 +69,7 @@ class TestNtpClass(unittest.TestCase):
         self.ntp.stop = Mock()
         self.ntp.start = Mock()
         with patch("systime.ntp.NtpDate") as NtpDate:
-            self.ntp.update({"enable": 1})
+            self.ntp.update({"enable": True})
             NtpDate.assert_called_once_with(self.model.db["ntp"]["server"])
             self.ntp.stop.assert_called_once_with()
             self.ntp.start.assert_called_once_with()
