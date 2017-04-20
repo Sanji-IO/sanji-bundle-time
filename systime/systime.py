@@ -26,16 +26,14 @@ class SysTime(object):
         """
         rc = None
         try:
-            dateTimeString = datetime\
-                .strptime(time_string, "%Y-%m-%dT%H:%M:%S.%fZ")\
-                .strftime("%m%d%H%M%Y")
+            datetime.strptime(time_string, "%Y-%m-%dT%H:%M:%S.%fZ")
 
         except ValueError:
             raise ValueError('Time format error.')
 
         else:
             rc = subprocess.call(
-                "date --utc %s; hwclock -w" % dateTimeString, shell=True)
+                "date --set=\"%s\"; hwclock -w" % time_string, shell=True)
 
         return True if rc == 0 else False
 
