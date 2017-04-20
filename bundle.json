@@ -1,6 +1,6 @@
 {
   "name": "time",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "author": "Zack YL Shih",
   "email": "ZackYL.Shih@moxa.com",
   "description": "Provides the system-time management function",
